@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   DESIGN TOKENS — single source of truth for the whole site.
+   Change a value here and every component follows.
+   (If you change a brand colour, mirror it in src/config/brand.ts, which is
+   used by the generated OG image and favicon that cannot read CSS.)
+   ========================================================================== */
+
+@theme {
+  /* Palette: materials and markings you find on a building site */
+  --color-steel: #1f272c; /* structural steel: primary ink, dark surfaces */
+  --color-girder: #5a666d; /* weathered steel: secondary text */
+  --color-concrete: #d8dcdc; /* poured concrete: borders, dividers, muted fills */
+  --color-formwork: #f3f4f2; /* pale timber formwork: page background */
+  --color-hivis: #ffb400; /* hi-vis amber: the single accent, used as a fill */
+  --color-hivis-deep: #e29a00; /* pressed / hover state of the accent */
+
+  /* Typography */
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion */
+  --ease-course: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  --header-h: 4.5rem;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --container: 1600px;
+
+  /* Gradients: a soft hi-vis glow over formwork for light pages,
+     and a steel gradient for dark sections. */
+  --gradient-glow:
+    radial-gradient(
+      60% 55% at 85% 12%,
+      color-mix(in oklab, var(--color-hivis) 32%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      55% 50% at 4% 96%,
+      color-mix(in oklab, var(--color-concrete) 95%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(
+      180deg,
+      var(--color-formwork),
+      color-mix(in oklab, var(--color-formwork) 55%, var(--color-concrete))
+    );
+  --gradient-steel:
+    radial-gradient(
+      70% 60% at 88% 0%,
+      color-mix(in oklab, var(--color-hivis) 24%, transparent),
+      transparent 65%
+    ),
+    linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--color-steel) 86%, white),
+      var(--color-steel)
+    );
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+html {
+  background: var(--color-formwork);
+  color: var(--color-steel);
+  scroll-padding-top: var(--header-h);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  min-height: 100svh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-hivis);
+  color: var(--color-steel);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-hivis-deep);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+
+/* Page-width container with the shared gutter */
+@utility container-site {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Archivo's width axis: use for signage-style headings */
+@utility wdth-wide {
+  font-variation-settings: "wdth" 120;
+}
+@utility wdth-normal {
+  font-variation-settings: "wdth" 100;
+}
+@utility wdth-tight {
+  font-variation-settings: "wdth" 80;
+}
+
+/* Gradient backgrounds (defined in :root above) */
+@utility bg-glow {
+  background-image: var(--gradient-glow);
+}
+@utility bg-steel-gradient {
+  background-image: var(--gradient-steel);
+}
+
+/* ==========================================================================
+   SMOOTH SCROLL (Lenis)
+   ========================================================================== */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   ACCESSIBILITY
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
