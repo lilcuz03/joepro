@@ -481,15 +481,17 @@ export function Contact() {
                     </div>
 
                     <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      {/* Phones: full width, label left and arrow at the right
+                          edge. From sm: compact button with centred content. */}
                       <button
                         type="submit"
                         disabled={status === "sending"}
-                        className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-hivis py-1.5 pl-6 pr-1.5 font-semibold text-steel transition-colors duration-300 ease-course hover:bg-hivis-deep focus-visible:outline-offset-4 disabled:cursor-wait disabled:opacity-70"
+                        className="group inline-flex min-h-12 w-full items-center justify-between gap-3 rounded-full bg-hivis py-1.5 pl-6 pr-1.5 font-semibold text-steel transition-colors duration-300 ease-course hover:bg-hivis-deep focus-visible:outline-offset-4 disabled:cursor-wait disabled:opacity-70 sm:w-auto sm:justify-center"
                       >
                         {status === "sending" ? "Sending..." : "Send request"}
                         <span
                           aria-hidden
-                          className="inline-flex size-9 items-center justify-center rounded-full bg-steel text-formwork"
+                          className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-steel text-formwork"
                         >
                           {status === "sending" ? (
                             <svg
