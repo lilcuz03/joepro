@@ -141,7 +141,7 @@ export function Header() {
             aria-label="Primary"
             className="hidden lg:block"
           >
-            {/* own frosted pill so links stay readable over the hero photo;
+            {/* own frosted pill so links stay readable over any photo;
                 it melts away once the full header bar is showing */}
             <ul
               className={cn(
@@ -164,11 +164,15 @@ export function Header() {
           </nav>
 
           <div className="flex items-center justify-self-end">
-            <QuoteButton
-              href={siteConfig.cta.href}
-              label={siteConfig.cta.label}
-              className="hidden lg:inline-flex"
-            />
+            {/* The wrapper does the hiding, so the quote button stays off
+                phones and tablets no matter how QuoteButton handles
+                className. The menu button covers those sizes. */}
+            <div className="hidden lg:block">
+              <QuoteButton
+                href={siteConfig.cta.href}
+                label={siteConfig.cta.label}
+              />
+            </div>
             <MenuButton
               open={open}
               onToggle={toggle}

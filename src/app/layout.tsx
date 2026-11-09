@@ -1,12 +1,14 @@
+// src/app/layout.tsx
 import type { Metadata, Viewport } from "next";
 import { Archivo, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header/Header";
+import { Footer } from "@/components/footer/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import WhatsAppWidget from "@/components/shared/WhatsAppWidget";
 import { siteConfig } from "@/config/site";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
-import { Footer } from "@/components/footer/Footer";
 
 // Archivo: a grotesque with a width axis, close to highway and site signage.
 const archivo = Archivo({
@@ -83,8 +85,10 @@ export default function RootLayout({
         <JsonLd data={websiteJsonLd()} />
         <SmoothScroll>
           <Header />
-          {children}
-          <Footer/>
+          {/* id="main" is the target of the header's "Skip to content" link */}
+          <main id="main">{children}</main>
+          <Footer />
+          <WhatsAppWidget />
         </SmoothScroll>
       </body>
     </html>
