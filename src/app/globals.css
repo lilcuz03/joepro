@@ -8,13 +8,16 @@
    ========================================================================== */
 
 @theme {
-  /* Palette: materials and markings you find on a building site */
+  /* Palette: materials and markings you find on a building site.
+     The accent is the orange from the JoePro logo. */
   --color-steel: #1f272c; /* structural steel: primary ink, dark surfaces */
   --color-girder: #5a666d; /* weathered steel: secondary text */
   --color-concrete: #d8dcdc; /* poured concrete: borders, dividers, muted fills */
   --color-formwork: #f3f4f2; /* pale timber formwork: page background */
-  --color-hivis: #ffb400; /* hi-vis amber: the single accent, used as a fill */
-  --color-hivis-deep: #e29a00; /* pressed / hover state of the accent */
+  --color-hivis: #fd5e02; /* logo orange: the single accent, used as a fill.
+                             Put steel text on it, not white (white is too
+                             low in contrast on this orange). */
+  --color-hivis-deep: #e85500; /* hover / pressed state, focus ring, hover text */
 
   /* Typography */
   --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
@@ -30,7 +33,7 @@
   --gutter: clamp(1.25rem, 4vw, 3rem);
   --container: 1600px;
 
-  /* Gradients: a soft hi-vis glow over formwork for light pages,
+  /* Gradients: a soft orange glow over formwork for light pages,
      and a steel gradient for dark sections. */
   --gradient-glow:
     radial-gradient(

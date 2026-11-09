@@ -2,6 +2,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { services } from "@/config/services";
@@ -112,22 +113,16 @@ export function Footer() {
             <Link
               href="/"
               aria-label={`${siteConfig.name}, home`}
-              className="group inline-flex items-center gap-3"
+              className="group inline-block"
             >
-              <span
-                aria-hidden
-                className="font-display wdth-wide inline-flex size-12 items-center justify-center rounded-xl bg-hivis text-lg font-extrabold text-steel transition-transform duration-500 ease-settle group-hover:-rotate-6"
-              >
-                {siteConfig.initials}
-              </span>
-              <span>
-                <span className="font-display wdth-wide block text-xl font-extrabold leading-none tracking-tight">
-                  {siteConfig.shortName}
-                </span>
-                <span className="mt-1 block text-sm text-formwork/65">
-                  Construction
-                </span>
-              </span>
+              {/* white version of the logo, made for dark backgrounds */}
+              <Image
+                src="/images/logo.png"
+                alt=""
+                width={800}
+                height={164}
+                className="h-14 w-auto origin-left transition-transform duration-500 ease-settle group-hover:scale-[1.03] md:h-16"
+              />
             </Link>
             <p className="mt-6 max-w-[40ch] text-base leading-relaxed text-formwork/75">
               Building and roofing contractor in {area}, serving homes and
@@ -228,7 +223,9 @@ export function Footer() {
             id={panelId}
             className={cn(
               "grid transition-[grid-template-rows,visibility] duration-500 ease-course",
-              servicesOpen ? "visible grid-rows-[1fr]" : "invisible grid-rows-[0fr]",
+              servicesOpen
+                ? "visible grid-rows-[1fr]"
+                : "invisible grid-rows-[0fr]",
             )}
           >
             <div className="overflow-hidden">

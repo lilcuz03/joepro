@@ -15,7 +15,7 @@ export function organizationJsonLd() {
     url: siteConfig.url,
     description: siteConfig.description,
     slogan: siteConfig.tagline,
-    image: absoluteUrl("/opengraph-image"),
+    image: absoluteUrl("/opengraph-image.png"),
     logo: absoluteUrl("/icon"),
     email: contact.email,
     telephone: `+${contact.phoneHref.replace(/^\+/, "")}`,

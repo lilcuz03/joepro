@@ -135,7 +135,11 @@ export function Header() {
             scrolled ? "py-2.5" : "py-3 sm:py-4 lg:py-5",
           )}
         >
-          <Logo onClick={close} />
+          {/* dark logo on the pale header, white logo over the dark menu */}
+          <Logo
+            onClick={close}
+            tone={open ? "light" : "dark"}
+          />
 
           <nav
             aria-label="Primary"

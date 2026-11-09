@@ -1,27 +1,62 @@
+// src/components/header/Logo.tsx
+import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
 
-export function Logo({ onClick }: { onClick?: () => void }) {
+type Props = {
+  onClick?: () => void;
+  /**
+   * "dark"  = dark logo, for pale backgrounds (the normal header)
+   * "light" = white logo, for dark backgrounds (the open mobile menu)
+   * Both are stacked and cross-fade, so switching never flickers.
+   */
+  tone?: "dark" | "light";
+  className?: string;
+};
+
+// Files live in /public/images. Both are 800 x 164 (tagline removed for header size).
+const WIDTH = 800;
+const HEIGHT = 164;
+
+const size = "h-9 w-auto sm:h-10 lg:h-11";
+const fade = "transition-opacity duration-500 ease-course";
+
+export function Logo({ onClick, tone = "dark", className }: Props) {
   return (
     <Link
       href="/"
       onClick={onClick}
       aria-label={`${siteConfig.name}, home`}
-      className="group inline-flex items-center gap-3"
+      className={cn("group inline-block", className)}
     >
-      <span
-        aria-hidden
-        className="font-display wdth-wide grid size-10 place-items-center rounded-[0.55rem] bg-hivis text-[0.95rem] font-extrabold tracking-tight text-steel transition-all duration-500 ease-course group-hover:-rotate-6 group-hover:scale-105"
-      >
-        {siteConfig.initials}
-      </span>
-      <span className="flex flex-col leading-none">
-        <span className="font-display wdth-wide text-[1.05rem] font-extrabold tracking-tight">
-          {siteConfig.shortName}
-        </span>
-        <span className="mt-1 text-[0.8rem] font-medium opacity-60">
-          Construction
-        </span>
+      <span className="relative block transition-transform duration-500 ease-course group-hover:scale-[1.03]">
+        <Image
+          src="/images/logo-black.png"
+          alt=""
+          width={WIDTH}
+          height={HEIGHT}
+          priority
+          className={cn(
+            size,
+            fade,
+            tone === "light" ? "opacity-0" : "opacity-100",
+          )}
+        />
+        <Image
+          src="/images/logo-black.png"
+          alt=""
+          width={WIDTH}
+          height={HEIGHT}
+          priority
+          aria-hidden
+          className={cn(
+            "absolute inset-0",
+            size,
+            fade,
+            tone === "light" ? "opacity-100" : "opacity-0",
+          )}
+        />
       </span>
     </Link>
   );

@@ -5,5 +5,5 @@
 export const brand = {
   steel: "#1f272c",
   formwork: "#f3f4f2",
-  hivis: "#ffb400",
+  hivis: "#fd5e02", // the orange from the JoePro logo
 } as const;
