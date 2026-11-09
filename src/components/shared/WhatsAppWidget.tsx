@@ -11,7 +11,11 @@ import { cn } from "@/lib/utils";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const { contact } = siteConfig;
-const WHATSAPP_NUMBER = contact.phoneHref.replace(/\D/g, ""); // "27629900184"
+// Uses a separate `whatsapp` number from siteConfig.contact if you add one
+// (digits only, with country code, e.g. "27821234567"); otherwise the phone.
+const WHATSAPP_NUMBER = (
+  (contact as { whatsapp?: string }).whatsapp ?? contact.phoneHref
+).replace(/\D/g, "");
 const whatsappLink = (text: string) =>
   `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 
@@ -40,6 +44,7 @@ const paths = {
   back: "M19 12H5M11 18l-6-6 6-6",
   zap: "M13 2 3 14h9l-1 8 10-12h-9l1-8z",
   restart: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8M3 3v5h5",
+  copy: "M9 9h11a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2zM5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1",
 } as const;
 
 function Icon({
@@ -161,6 +166,8 @@ export default function WhatsAppWidget() {
   const [teaser, setTeaser] = useState(false);
   const [step, setStep] = useState(0);
   const [sent, setSent] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [selected, setSelected] = useState<string[]>([]);
   const [jobType, setJobType] = useState<JobType | null>(null);
@@ -207,10 +214,12 @@ export default function WhatsAppWidget() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const toggleService = (id: string) =>
+  const toggleService = (id: string) => {
+    setError(null);
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
+  };
 
   const serviceLabels = options
     .filter((o) => selected.includes(o.id))
@@ -254,12 +263,36 @@ export default function WhatsAppWidget() {
     setName("");
     setNotes("");
     setSent(false);
+    setCopied(false);
+    setError(null);
     setStep(0);
   };
 
   const toggleOpen = () => {
     setOpen((v) => !v);
     setTeaser(false);
+  };
+
+  // Tapped "Send" while something required is missing: jump to that step
+  // and say what is needed, instead of leaving a dead grey button.
+  const explainMissing = () => {
+    if (selected.length === 0) {
+      setStep(0);
+      setError("Pick at least one service first.");
+    } else if (area.trim().length === 0) {
+      setStep(1);
+      setError("Add your suburb or area so we know where the job is.");
+    }
+  };
+
+  const copyMessage = async () => {
+    try {
+      await navigator.clipboard.writeText(message);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setError("Could not copy the message. Please select and copy it manually.");
+    }
   };
 
   return (
@@ -355,6 +388,15 @@ export default function WhatsAppWidget() {
               data-lenis-prevent
               className="flex-1 overflow-y-auto overscroll-contain px-5 py-5"
             >
+              {error && (
+                <p
+                  role="alert"
+                  className="mb-4 rounded-xl border border-red-600/30 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
+                >
+                  {error}
+                </p>
+              )}
+
               <AnimatePresence
                 mode="wait"
                 initial={false}
@@ -417,7 +459,10 @@ export default function WhatsAppWidget() {
                         </span>
                         <input
                           value={area}
-                          onChange={(e) => setArea(e.target.value)}
+                          onChange={(e) => {
+                            setArea(e.target.value);
+                            setError(null);
+                          }}
                           placeholder="e.g. Shallcross"
                           autoComplete="address-level2"
                           className={inputCls}
@@ -585,10 +630,11 @@ export default function WhatsAppWidget() {
                     <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 ) : (
+                  // Always tappable: jumps to whatever is missing and says so
                   <button
                     type="button"
-                    disabled
-                    className="flex h-12 flex-1 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-steel/10 text-sm font-semibold text-girder"
+                    onClick={explainMissing}
+                    className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-hivis text-sm font-semibold text-steel transition-colors duration-300 ease-course hover:bg-hivis-deep active:scale-[0.98]"
                   >
                     <WhatsAppIcon className="size-5" />
                     Send on WhatsApp
@@ -598,7 +644,7 @@ export default function WhatsAppWidget() {
 
               {step === steps.length - 1 && !canSend && (
                 <p className="mt-3 text-center text-xs text-girder">
-                  Choose at least one service and add your suburb to send.
+                  Pick a service and add your suburb, then send.
                 </p>
               )}
 
@@ -611,20 +657,43 @@ export default function WhatsAppWidget() {
               {sent && (
                 <div
                   role="status"
-                  className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-steel/5 px-3 py-2 text-xs text-girder"
+                  className="mt-3 rounded-xl bg-steel/5 px-3 py-2.5 text-xs text-girder"
                 >
-                  <span>WhatsApp opened. Press send there to finish.</span>
-                  <button
-                    type="button"
-                    onClick={reset}
-                    className="inline-flex min-h-9 shrink-0 items-center gap-1 font-semibold text-steel underline decoration-hivis decoration-2 underline-offset-4"
-                  >
-                    <Icon
-                      name="restart"
-                      className="size-3"
-                    />
-                    Start over
-                  </button>
+                  <p>
+                    WhatsApp should have opened. Press send there to finish. If
+                    it didn&apos;t open, copy the message and send it to{" "}
+                    <a
+                      href={`tel:${contact.phoneHref}`}
+                      className="font-semibold text-steel underline decoration-hivis decoration-2 underline-offset-2"
+                    >
+                      {contact.phone}
+                    </a>
+                    .
+                  </p>
+                  <div className="mt-2 flex items-center justify-between gap-3">
+                    <button
+                      type="button"
+                      onClick={copyMessage}
+                      className="inline-flex min-h-9 items-center gap-1.5 font-semibold text-steel underline decoration-hivis decoration-2 underline-offset-4"
+                    >
+                      <Icon
+                        name={copied ? "check" : "copy"}
+                        className="size-3.5"
+                      />
+                      {copied ? "Copied" : "Copy message"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={reset}
+                      className="inline-flex min-h-9 shrink-0 items-center gap-1 font-semibold text-steel underline decoration-hivis decoration-2 underline-offset-4"
+                    >
+                      <Icon
+                        name="restart"
+                        className="size-3"
+                      />
+                      Start over
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
