@@ -56,7 +56,8 @@ export function ServiceArea() {
         </div>
 
         {/* ---------------------------------------------------------
-            Big map, with the info card floating on top from lg up
+            Map on top; the info card sits BELOW it on phones and tablets
+            and only floats over the map's bottom left from lg up.
         --------------------------------------------------------- */}
         <div className="relative mt-10 md:mt-14">
           <div className="relative h-[22rem] overflow-hidden rounded-3xl border border-steel/10 bg-concrete shadow-[0_24px_60px_-30px_rgba(31,39,44,0.35)] sm:h-[30rem] lg:h-[min(46rem,80svh)]">
@@ -72,13 +73,15 @@ export function ServiceArea() {
               }
             />
 
-            {/* locked state: tap to start using the map */}
+            {/* locked state: tap to start using the map.
+                The pill sits at the bottom (top right from lg) because Google
+                puts the pin in the exact centre of the map. */}
             {!active && (
               <button
                 type="button"
                 onClick={() => setActive(true)}
                 aria-label="Activate the map so you can zoom and drag it"
-                className="group absolute inset-0 z-10 flex items-center justify-center bg-steel/10 transition-colors duration-300 ease-course hover:bg-steel/20 focus-visible:outline-offset-[-4px]"
+                className="group absolute inset-0 z-10 flex items-end justify-center bg-steel/10 p-4 transition-colors duration-300 ease-course hover:bg-steel/20 focus-visible:outline-offset-[-4px] lg:items-start lg:justify-end"
               >
                 <span className="inline-flex min-h-12 items-center gap-2.5 rounded-full bg-steel px-6 text-sm font-semibold text-formwork shadow-[0_8px_30px_-8px_rgba(31,39,44,0.6)] transition-colors duration-300 ease-course group-hover:bg-hivis group-hover:text-steel sm:text-base">
                   <svg
@@ -111,9 +114,9 @@ export function ServiceArea() {
             )}
           </div>
 
-          {/* info card: overlaps the bottom edge below lg, floats over the
+          {/* info card: full width under the map below lg, floating over the
               map's bottom left from lg */}
-          <div className="relative z-20 mx-3 -mt-10 rounded-3xl border border-steel/10 bg-white p-5 shadow-[0_24px_60px_-24px_rgba(31,39,44,0.45)] sm:mx-6 sm:p-6 md:p-7 lg:absolute lg:bottom-6 lg:left-6 lg:m-0 lg:w-[26rem] xl:left-8 xl:bottom-8">
+          <div className="relative z-20 mt-4 rounded-3xl border border-steel/10 bg-white p-5 shadow-[0_24px_60px_-24px_rgba(31,39,44,0.45)] sm:p-6 md:p-7 lg:absolute lg:bottom-6 lg:left-6 lg:m-0 lg:w-[26rem] xl:bottom-8 xl:left-8">
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-girder">
               Visit or call us
             </p>
