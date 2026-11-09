@@ -103,7 +103,7 @@ export function Footer() {
       />
 
       {/* Same horizontal padding scale as the header and every section */}
-      <div className="w-full px-4 pb-8 pt-16 sm:px-6 md:pt-20 lg:px-10 lg:pt-24 2xl:px-14">
+      <div className="w-full px-4 pb-6 pt-16 sm:px-6 md:pt-20 lg:px-10 lg:pt-24 2xl:px-14">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-10">
           {/* ---------------------------------------------------------
               Brand
@@ -228,9 +228,7 @@ export function Footer() {
             id={panelId}
             className={cn(
               "grid transition-[grid-template-rows,visibility] duration-500 ease-course",
-              servicesOpen
-                ? "visible grid-rows-[1fr]"
-                : "invisible grid-rows-[0fr]",
+              servicesOpen ? "visible grid-rows-[1fr]" : "invisible grid-rows-[0fr]",
             )}
           >
             <div className="overflow-hidden">
@@ -298,13 +296,19 @@ export function Footer() {
         </div>
       </div>
 
-      {/* decorative wordmark along the bottom edge; cropped on purpose */}
-      <p
-        aria-hidden
-        className="font-display wdth-wide pointer-events-none -mb-[0.16em] select-none whitespace-nowrap text-center text-[clamp(4.5rem,21vw,22rem)] font-extrabold leading-[0.8] tracking-[-0.04em] text-formwork/[0.05]"
-      >
-        JOEPRO
-      </p>
+      {/* Decorative wordmark. Its size comes from the width of this padded
+          block (cqw = 1% of the block's width), so all six letters always
+          fit with the same side padding as the rest of the page, and the
+          bottom padding keeps it off the edge. If it still feels too big or
+          too small, change 19cqw: lower = smaller. */}
+      <div className="w-full px-4 pb-6 pt-2 sm:px-6 md:pb-8 lg:px-10 2xl:px-14 [container-type:inline-size]">
+        <p
+          aria-hidden
+          className="font-display wdth-wide select-none whitespace-nowrap text-center text-[19cqw] font-extrabold leading-[0.95] tracking-[-0.04em] text-formwork/[0.05]"
+        >
+          JOEPRO
+        </p>
+      </div>
     </footer>
   );
 }
