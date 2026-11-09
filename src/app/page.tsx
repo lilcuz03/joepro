@@ -4,6 +4,7 @@ import { Services } from "@/components/home/Services";
 import { About } from "@/components/home/About";
 import { Projects } from "@/components/home/Projects";
 import { Contact } from "@/components/home/Contact";
+import { Reviews } from "@/components/home/Reviews";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -16,7 +17,8 @@ export default function Home() {
       <Services />
       <About />
       <Projects />
-      <Contact/>
+      <Reviews />
+      <Contact />
     </main>
   );
 }
