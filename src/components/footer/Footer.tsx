@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { services } from "@/config/services";
+import { activeSocials } from "@/config/socials";
 import { getLenis } from "@/lib/lenis";
 import { cn } from "@/lib/utils";
 
@@ -128,6 +129,32 @@ export function Footer() {
               Building and roofing contractor in {area}, serving homes and
               businesses across Durban for {siteConfig.yearsInIndustry} years.
             </p>
+
+            {/* Socials: each one appears as soon as its link is added in
+                src/config/socials.ts. No links yet means nothing is shown. */}
+            {activeSocials.length > 0 && (
+              <div className="mt-6">
+                <p className="mb-3 text-sm text-formwork/60">Follow us</p>
+                <ul
+                  role="list"
+                  className="flex flex-wrap gap-2"
+                >
+                  {activeSocials.map((social) => (
+                    <li key={social.name}>
+                      <a
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-11 items-center rounded-full border border-formwork/25 px-4 text-sm font-medium text-formwork/85 transition-colors duration-300 ease-course hover:border-hivis hover:bg-hivis hover:text-steel focus-visible:border-hivis focus-visible:bg-hivis focus-visible:text-steel"
+                      >
+                        {social.name}
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* ---------------------------------------------------------
