@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/header/Header";
 import { Footer } from "@/components/footer/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { SiteChrome } from "@/components/SiteChrome";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import WhatsAppWidget from "@/components/shared/WhatsAppWidget";
 import { siteConfig } from "@/config/site";
@@ -37,7 +38,8 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.name, url: siteConfig.url }],
   creator: siteConfig.name,
   publisher: siteConfig.name,
-  alternates: { canonical: "/" },
+  // No site-wide canonical here: it would tell Google every page is a copy of
+  // the home page. Each page sets its own in its `metadata`.
   formatDetection: { telephone: false, email: false, address: false },
   openGraph: {
     type: "website",
@@ -84,11 +86,18 @@ export default function RootLayout({
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd()} />
         <SmoothScroll>
-          <Header />
+          {/* header, footer and WhatsApp button are hidden on the /card page */}
+          <SiteChrome>
+            <Header />
+          </SiteChrome>
+
           {/* id="main" is the target of the header's "Skip to content" link */}
           <main id="main">{children}</main>
-          <Footer />
-          <WhatsAppWidget />
+
+          <SiteChrome>
+            <Footer />
+            <WhatsAppWidget />
+          </SiteChrome>
         </SmoothScroll>
       </body>
     </html>
